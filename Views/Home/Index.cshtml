@@ -1,0 +1,127 @@
+﻿@{
+	ViewData["Title"] = "Clube do Livro - Acesso";
+	Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewData["Title"]</title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+	<style>
+
+		/* Estilos do Corpo e Fundo */
+				body {
+						background-image: url('/NovaPasta/FUNDO.jpg');
+						background-size: cover;
+						background-position: center;
+						background-repeat: no-repeat;
+						min-height: 100vh;
+						margin: 0;
+						padding-top: 0;
+
+		}
+
+				.header-classico {
+						background-color: rgba(90, 60, 46, 0.98);
+						color: #f0e6c4;
+						padding: 30px 0;
+						text-align: center;
+
+			/* Borda superior e inferior marcadas */
+						border-top: 8px solid #ae8e68;
+						border-bottom: 8px solid #ae8e68;
+						box-shadow: 0 4px 15px rgba(0, 0, 0, 0.9);
+
+			/* Fonte Clássica/Colonial (Garamond, que é muito comum) */
+						font-family: Garamond, Georgia, "Times New Roman", serif;
+						text-transform: capitalize;
+
+		}
+
+					.header-classico h1 {
+							font-weight: 700;
+							letter-spacing: 2px;
+							margin: 0;
+							font-size: 3rem;
+							text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+
+		}
+
+
+		/* * CONTAINER DE POSICIONAMENTO DO LINK (Mais para baixo)
+						 * ----------------------------------------------------
+						 */
+				.container-centralizado {
+						display: flex;
+						justify-content: center;
+						min-height: calc(100vh - 120px);
+
+			/* Aumenta o Padding Top para empurrar o link para baixo,
+							   posicionando-o mais próximo da metade inferior da tela */
+						padding-top: 40vh;
+						padding-bottom: 50px;
+
+		}
+
+
+		/* * ESTILOS DO LINK - FONTE CLÁSSICA
+						 * ----------------------------------------------------
+						 */
+				.link-grande-elegante {
+						padding: 25px 50px;
+						font-size: 2.2rem;
+						font-weight: 700;
+						background-color: rgba(90, 60, 46, 0.95);
+						border: 4px solid #ae8e68;
+						color: #f0e6c4;
+						text-decoration: none;
+						border-radius: 8px;
+						transition: all 0.3s ease;
+						box-shadow: 0 6px 15px rgba(0, 0, 0, 0.8);
+
+			/* Fonte Clássica/Colonial */
+						font-family: Garamond, Georgia, "Times New Roman", serif;
+						text-transform: uppercase;
+
+		}
+
+					.link-grande-elegante:hover {
+							background-color: #5a3c2e;
+							color: #ffffff;
+							border-color: #f0e6c4;
+							transform: scale(1.08);
+
+		}
+
+
+	</style>
+</head>
+<body>
+
+	<header class="header-classico">
+		<div class="container">
+			<h1>Clube do Livro</h1>
+		</div>
+	</header>
+
+	<div class="container container-centralizado">
+		<div class="row w-100">
+			<div class="col-12 text-center">
+
+				<a href="http://localhost:5200/Livro" class="btn link-grande-elegante">
+					CADASTRE SEU LIVRO
+				</a>
+
+			</div>
+
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

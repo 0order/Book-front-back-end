@@ -1,0 +1,376 @@
+﻿@using GerenciamentoLivros.Models
+@using System.Linq
+@model List<GerenciamentoLivros.Models.Livro>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clube do Livro - Lista de Livros</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-image: url('/NovaPasta/FUNDO2.jpg'), url('/NovaPasta/fundo.jpg');
+            background-size: contain, cover;
+            background-position: center, center;
+            background-repeat: no-repeat, no-repeat;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            background-color: #f5f5f5;
+            font-family: 'Merriweather', serif;
+        }
+
+        .livro-lista-container {
+            width: 26vw;
+            max-height: 65vh;
+            overflow-y: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(calc(-50% - 13vw), -50%);
+            padding: 20px;
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: left;
+        }
+
+  
+        .pesquisa-box {
+            width: 60%;
+            margin-bottom: 8px;
+        }
+
+        #pesquisa {
+            width: 100%;
+            padding: 7px 10px;
+            font-size: 0.9rem;
+            border: 2px solid #ae8e68;
+            border-radius: 6px;
+            background-color: #fff;
+        }
+
+        .livro-lista-titulo {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #3e2723;
+            margin-bottom: 12px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .livro-lista {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .livro-item {
+            width: 100%;
+            padding: 13px;
+            background-color: rgba(240, 230, 196, 0.95);
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+            border: 1px solid #ae8e68;
+        }
+
+        .livro-campo {
+            margin-bottom: 6px;
+        }
+
+        .livro-campo-titulo {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #3e2723;
+            display: block;
+        }
+
+        .livro-campo-valor {
+            font-size: 0.85rem;
+            color: #3e2723;
+            border-bottom: 1px dashed #3e2723;
+            padding: 2px 0;
+            display: block;
+        }
+
+        .livro-acoes {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .livro-acao-link {
+            font-size: 0.82rem;
+            padding: 6px 10px;
+            border-radius: 4px;
+            background-color: rgba(62, 39, 35, 0.9);
+            color: #f0e6c4;
+            border: 2px solid #ae8e68;
+            text-decoration: none;
+            text-align: center;
+            flex: 1;
+        }
+
+            .livro-acao-link:hover {
+                background-color: #3e2723;
+                color: #fff;
+                border-color: #f0e6c4;
+            }
+
+        .livro-separador {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ae8e68, transparent);
+            margin: 8px 0;
+            width: 100%;
+        }
+
+
+        #modalExcluir {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        #modalBox {
+            background: #fff;
+            width: 340px;
+            padding: 18px;
+            border-radius: 8px;
+            border: 3px solid #3e2723;
+            text-align: center;
+        }
+
+            #modalBox h3 {
+                margin-top: 6px;
+                margin-bottom: 8px;
+                color: #3e2723;
+                font-size: 1.15rem;
+            }
+
+            #modalBox img {
+                width: 46px;
+                margin-bottom: 8px;
+            }
+
+            #modalBox p {
+                color: #3e2723;
+                margin-bottom: 14px;
+            }
+
+        .modal-btn {
+            padding: 8px 20px;
+            margin: 6px;
+            border-radius: 6px;
+            font-weight: 700;
+            border: 1px solid #3e2723;
+            cursor: pointer;
+        }
+
+        #btnConfirmar {
+            background-color: #3e2723;
+            color: white;
+        }
+
+        #btnCancelar {
+            background-color: #ddd;
+            color: #333;
+        }
+
+
+        .btn-navegar-direita {
+            position: absolute;
+            top: 41%;
+            left: 62%;
+            transform: translateX(-50%);
+            font-family: 'Merriweather', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            padding: 12px 25px;
+            min-width: 200px;
+            background-color: rgba(62, 39, 35, 0.88);
+            border: 2px solid #ae8e68;
+            color: #f0e6c4;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: 0.2s;
+            text-align: center;
+        }
+
+            .btn-navegar-direita:hover {
+                background-color: #3e2723;
+                color: #ffffff;
+                border-color: #f0e6c4;
+            }
+
+
+
+        {
+            width: 85vw;
+            transform: translate(-50%, -50%);
+            left: 50%;
+            top: 50%;
+        }
+
+        .pesquisa-box {
+            width: 80%;
+        }
+
+        }
+    </style>
+</head>
+<body>
+
+    <a href="/Livro" class="btn-navegar-direita">Cadastrar Novo Livro</a>
+
+    <div class="livro-lista-container">
+
+
+        <div class="pesquisa-box">
+            <input id="pesquisa" type="text" placeholder="Pesquisar por nome, autor, gênero..." />
+        </div>
+
+        <h2 class="livro-lista-titulo">Lista de Livros</h2>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="livro-lista" id="listaLivros">
+                @foreach (var item in Model)
+                {
+                    <div class="livro-item" data-codigo="@item.Codigo">
+                        <div class="livro-campo">
+                            <span class="livro-campo-titulo">Nome do Livro</span>
+                            <span class="livro-campo-valor">@item.NomeLivro</span>
+                        </div>
+
+                        <div class="livro-campo">
+                            <span class="livro-campo-titulo">Nome do Autor</span>
+                            <span class="livro-campo-valor">@item.NomeAutor</span>
+                        </div>
+
+                        <div class="livro-campo">
+                            <span class="livro-campo-titulo">Gênero</span>
+                            <span class="livro-campo-valor">@item.Genero</span>
+                        </div>
+
+                        <div class="livro-campo">
+                            <span class="livro-campo-titulo">Quantidade de Páginas</span>
+                            <span class="livro-campo-valor">@item.QtPaginas</span>
+                        </div>
+
+                        <div class="livro-campo">
+                            <span class="livro-campo-titulo">Editora</span>
+                            <span class="livro-campo-valor">@item.Editora</span>
+                        </div>
+
+                        <div class="livro-campo">
+                            <span class="livro-campo-titulo">Ano de Publicação</span>
+                            <span class="livro-campo-valor">@item.AnoPublicacao</span>
+                        </div>
+
+                        <div class="livro-acoes">
+                            <a href="/Livro/Alterar/@item.Codigo" class="livro-acao-link">Alterar</a>
+                          
+                            <a href="#" class="livro-acao-link btn-excluir" data-url="/Livro/Excluir/@item.Codigo">Excluir</a>
+                        </div>
+                    </div>
+
+                    @if (item != Model.Last())
+                    {
+                        <div class="livro-separador"></div>
+                    }
+                }
+            </div>
+        }
+        else
+        {
+            <div class="livro-lista-vazia">Nenhum livro cadastrado.</div>
+        }
+    </div>
+
+
+    <div id="modalExcluir" role="dialog" aria-hidden="true">
+        <div id="modalBox">
+            <img src="https://cdn-icons-png.flaticon.com/512/463/463612.png" alt="Alerta" />
+            <h3>Alerta</h3>
+            <p>Deseja realmente excluir este livro?</p>
+            <div>
+                <button id="btnConfirmar" class="modal-btn">OK</button>
+                <button id="btnCancelar" class="modal-btn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const pesquisa = document.getElementById("pesquisa");
+            const itens = document.querySelectorAll(".livro-item");
+            const modal = document.getElementById("modalExcluir");
+            const btnConfirmar = document.getElementById("btnConfirmar");
+            const btnCancelar = document.getElementById("btnCancelar");
+            let urlParaExcluir = null;
+
+            pesquisa.addEventListener("input", function () {
+                const termo = this.value.trim().toLowerCase();
+                itens.forEach(item => {
+                    const texto = item.innerText.toLowerCase();
+                    item.style.display = texto.includes(termo) ? "block" : "none";
+                });
+            });
+
+            document.querySelectorAll(".btn-excluir").forEach(botao => {
+                botao.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    urlParaExcluir = this.getAttribute("data-url");
+                    modal.style.display = "flex";
+                    modal.setAttribute("aria-hidden", "false");
+                });
+            });
+
+
+            btnCancelar.addEventListener("click", function () {
+                modal.style.display = "none";
+                modal.setAttribute("aria-hidden", "true");
+                urlParaExcluir = null;
+            });
+
+            btnConfirmar.addEventListener("click", function () {
+                if (urlParaExcluir) {
+                    window.location.href = urlParaExcluir;
+                }
+            });
+
+
+            modal.addEventListener("click", function (e) {
+                if (e.target === modal) {
+                    modal.style.display = "none";
+                    modal.setAttribute("aria-hidden", "true");
+                    urlParaExcluir = null;
+                }
+            });
+
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape" && modal.style.display === "flex") {
+                    modal.style.display = "none";
+                    modal.setAttribute("aria-hidden", "true");
+                    urlParaExcluir = null;
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
